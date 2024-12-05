@@ -15,5 +15,7 @@ namespace KocCoAPI.Application.Interfaces
         Task<List<PackageDTO>> GetUserPackagesByEmailAsync(string userMail);
         Task<PackageDTO> GetPackageByIdAsync(int packageId);
         Task<bool> UpdatePackageAsync(PackageDTO packageDto);
+        Task<decimal> GetCoachIncomeByEmailAsync(string email);
+
     }
 }

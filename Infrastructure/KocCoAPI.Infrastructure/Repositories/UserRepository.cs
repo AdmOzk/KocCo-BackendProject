@@ -92,5 +92,33 @@ namespace KocCoAPI.Infrastructure.Repositories
                 .FirstOrDefaultAsync(p => p.PackageID == packageId);
         }
 
+        public async Task<decimal> GetCoachIncomeByEmailAsync(string email)
+        {
+            // User tablosunu kullanarak CoachPackage ve UserPurchases tablolarını ilişkilendirin
+            var totalIncome = await _dbContext.CoachPackages
+                .Join(
+                    _dbContext.Users, // Users tablosu ile ilişkilendir
+                    cp => cp.CoachId, // CoachPackages'deki CoachId
+                    u => u.UserId,    // Users'daki UserId
+                    (cp, u) => new { CoachPackage = cp, CoachEmail = u.EmailAddress } // Koçun email bilgisi ile eşleştir
+                )
+                .Where(x => x.CoachEmail == email) // Koçun emailine göre filtrele
+                .Join(
+                    _dbContext.UserPurchases, // UserPurchases tablosu ile ilişkilendir
+                    x => x.CoachPackage.PackageId, // CoachPackages'teki PackageId
+                    up => up.PackageID,            // UserPurchases'teki PackageID
+                    (x, up) => up.PackageID        // Paket ID'sini eşleştir
+                )
+                .Join(
+                    _dbContext.Packages, // Paket detaylarını al
+                    packageId => packageId,
+                    p => p.PackageID,
+                    (packageId, p) => p.Price // Paketin fiyatını al
+                )
+                .SumAsync(price => price); // Fiyatları topla
+
+            return totalIncome;
+        }
+
     }
 }

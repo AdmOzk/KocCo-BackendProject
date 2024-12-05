@@ -138,6 +138,26 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
+        [HttpGet("my-income")]
+        public async Task<IActionResult> GetMyIncome([FromQuery] string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest(new { message = "Email is required." });
+            }
+
+            try
+            {
+                var income = await _UserAppService.GetCoachIncomeByEmailAsync(email);
+
+                return Ok(new { email, totalIncome = income });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
 
     }
 }

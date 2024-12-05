@@ -60,6 +60,11 @@ namespace KocCoAPI.Domain.Services
             return await _userRepository.GetPackageByIdAsync(packageId);
         }
 
+        public async Task<decimal> GetCoachIncomeByEmailAsync(string email)
+        {
+            return await _userRepository.GetCoachIncomeByEmailAsync(email);
+        }
+
 
 
 

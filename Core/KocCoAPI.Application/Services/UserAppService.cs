@@ -91,5 +91,10 @@ namespace KocCoAPI.Application.Services
 
             return _mapper.Map<PackageDTO>(package);
         }
+
+        public async Task<decimal> GetCoachIncomeByEmailAsync(string email)
+        {
+            return await _userService.GetCoachIncomeByEmailAsync(email);
+        }
     }
 }
