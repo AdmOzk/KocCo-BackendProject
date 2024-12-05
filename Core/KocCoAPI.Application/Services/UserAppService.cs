@@ -69,5 +69,27 @@ namespace KocCoAPI.Application.Services
             var userPackages = await _userService.GetUserPackagesByEmailAsync(userMail);
             return _mapper.Map<List<PackageDTO>>(userPackages);
         }
+
+        public async Task<bool> UpdatePackageAsync(PackageDTO packageDto)
+        {
+            // DTO'dan Package nesnesine dönüşüm
+            var package = _mapper.Map<Package>(packageDto);
+
+            // Güncelleme işlemi
+            await _userService.UpdatePackageAsync(package);
+            return true;
+        }
+
+        public async Task<PackageDTO> GetPackageByIdAsync(int packageId)
+        {
+            var package = await _userService.GetPackageByIdAsync(packageId);
+
+            if (package == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<PackageDTO>(package);
+        }
     }
 }

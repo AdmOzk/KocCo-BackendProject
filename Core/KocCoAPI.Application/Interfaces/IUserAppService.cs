@@ -13,5 +13,7 @@ namespace KocCoAPI.Application.Interfaces
         Task<UserDTO> GetByUserMailToUserAsync(string userMail);
         Task<UserInfoDTO> GetBasicInfoByUserMailAsync(string userMail);
         Task<List<PackageDTO>> GetUserPackagesByEmailAsync(string userMail);
+        Task<PackageDTO> GetPackageByIdAsync(int packageId);
+        Task<bool> UpdatePackageAsync(PackageDTO packageDto);
     }
 }

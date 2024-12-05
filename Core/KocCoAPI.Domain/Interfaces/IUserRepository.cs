@@ -13,5 +13,9 @@ namespace KocCoAPI.Domain.Interfaces
         Task<User> GetByUserMailToUserAsync(string userMail);
 
         Task<List<Package>> GetUserPackagesByEmailAsync(string email);
+
+        Task UpdatePackageAsync(Package package);
+
+        Task<Package> GetPackageByIdAsync(int packageId);
     }
 }

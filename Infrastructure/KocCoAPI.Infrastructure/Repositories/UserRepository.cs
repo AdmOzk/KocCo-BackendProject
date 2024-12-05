@@ -67,5 +67,30 @@ namespace KocCoAPI.Infrastructure.Repositories
                 .Select(up => up.Package) // Sadece Package nesnesini seçiyoruz
                 .ToListAsync();
         }
+
+        public async Task UpdatePackageAsync(Package package)
+        {
+            var existingPackage = await _dbContext.Packages
+                .FirstOrDefaultAsync(p => p.PackageID == package.PackageID);
+
+            if (existingPackage != null)
+            {
+                existingPackage.PackageName = package.PackageName;
+                existingPackage.Description = package.Description;
+                existingPackage.Price = package.Price;
+                existingPackage.DurationInDays = package.DurationInDays;
+                existingPackage.Rating = package.Rating;
+
+                _dbContext.Packages.Update(existingPackage);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task<Package> GetPackageByIdAsync(int packageId)
+        {
+            return await _dbContext.Packages
+                .FirstOrDefaultAsync(p => p.PackageID == packageId);
+        }
+
     }
 }

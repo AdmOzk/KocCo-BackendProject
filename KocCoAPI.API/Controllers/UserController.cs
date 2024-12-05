@@ -1,4 +1,5 @@
-﻿using KocCoAPI.Application.Interfaces;
+﻿using KocCoAPI.Application.DTOs;
+using KocCoAPI.Application.Interfaces;
 using KocCoAPI.Application.Services;
 using KocCoAPI.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -66,6 +67,8 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
+
+
         [HttpGet("get-my-packages")]
         public async Task<IActionResult> GetMyPackages([FromQuery] string email)
         {
@@ -83,6 +86,51 @@ namespace KocCoAPI.API.Controllers
                 }
 
                 return Ok(packages);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("get-package-by-id")]
+        public async Task<IActionResult> GetPackageById([FromQuery] int packageId)
+        {
+            if (packageId <= 0)
+            {
+                return BadRequest(new { message = "Invalid package ID." });
+            }
+
+            try
+            {
+                var package = await _UserAppService.GetPackageByIdAsync(packageId);
+
+                if (package == null)
+                {
+                    return NotFound(new { message = "Package not found." });
+                }
+
+                return Ok(package);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("update-package")]
+        public async Task<IActionResult> UpdatePackage([FromBody] PackageDTO packageDto)
+        {
+            if (packageDto == null || packageDto.PackageID <= 0)
+            {
+                return BadRequest(new { message = "Invalid package details." });
+            }
+
+            try
+            {
+                await _UserAppService.UpdatePackageAsync(packageDto);
+
+                return Ok(new { message = "Package updated successfully." });
             }
             catch (Exception ex)
             {

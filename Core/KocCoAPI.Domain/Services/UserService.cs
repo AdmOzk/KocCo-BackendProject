@@ -50,6 +50,20 @@ namespace KocCoAPI.Domain.Services
             return await _userRepository.GetUserPackagesByEmailAsync(email);
         }
 
+        public async Task UpdatePackageAsync(Package package)
+        {
+            await _userRepository.UpdatePackageAsync(package);
+        }
+
+        public async Task<Package> GetPackageByIdAsync(int packageId)
+        {
+            return await _userRepository.GetPackageByIdAsync(packageId);
+        }
+
+
+
+
+
 
     }
 }
