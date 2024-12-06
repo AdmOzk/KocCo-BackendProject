@@ -16,5 +16,7 @@ namespace KocCoAPI.Domain.Interfaces
         Task<Package> GetPackageByIdAsync(int packageId);
         Task<decimal> GetCoachIncomeByEmailAsync(string email);
 
+        Task<List<User>> GetStudentsByCoachEmailAsync(string email);
+
     }
 }

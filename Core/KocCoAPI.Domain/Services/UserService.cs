@@ -65,6 +65,11 @@ namespace KocCoAPI.Domain.Services
             return await _userRepository.GetCoachIncomeByEmailAsync(email);
         }
 
+        public async Task<List<User>> GetStudentsByCoachEmailAsync(string email)
+        {
+            return await _userRepository.GetStudentsByCoachEmailAsync(email);
+        }
+
 
 
 

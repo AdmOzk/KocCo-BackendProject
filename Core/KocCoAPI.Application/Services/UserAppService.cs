@@ -96,5 +96,12 @@ namespace KocCoAPI.Application.Services
         {
             return await _userService.GetCoachIncomeByEmailAsync(email);
         }
+
+        public async Task<List<UserSimpleInfoDTO>> GetStudentsByCoachEmailAsync(string email)
+        {
+            var students = await _userService.GetStudentsByCoachEmailAsync(email);
+
+            return _mapper.Map<List<UserSimpleInfoDTO>>(students); // User nesnelerini DTO'ya dönüştürüyoruz
+        }
     }
 }

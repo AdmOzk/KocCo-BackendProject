@@ -120,5 +120,30 @@ namespace KocCoAPI.Infrastructure.Repositories
             return totalIncome;
         }
 
+        public async Task<List<User>> GetStudentsByCoachEmailAsync(string email)
+        {
+            return await _dbContext.CoachPackages
+                .Join(
+                    _dbContext.Users, // Users tablosuyla CoachPackages'ı ilişkilendiriyoruz
+                    cp => cp.CoachId,
+                    u => u.UserId,
+                    (cp, u) => new { CoachPackage = cp, CoachEmail = u.EmailAddress }
+                )
+                .Where(x => x.CoachEmail == email) // Koçun email adresine göre filtreleme
+                .Join(
+                    _dbContext.UserPurchases, // CoachPackage ile UserPurchases'ı ilişkilendiriyoruz
+                    x => x.CoachPackage.PackageId,
+                    up => up.PackageID,
+                    (x, up) => up.StudentID // Satın alan öğrencilerin ID'sini alıyoruz
+                )
+                .Join(
+                    _dbContext.Users, // Öğrencilerin detay bilgilerini almak için Users tablosunu birleştiriyoruz
+                    studentId => studentId,
+                    u => u.UserId,
+                    (studentId, u) => u // Tüm öğrenci detaylarını seçiyoruz
+                )
+                .ToListAsync();
+        }
+
     }
 }

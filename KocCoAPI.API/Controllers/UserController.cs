@@ -158,6 +158,31 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
+        [HttpGet("get-students-by-coach-email")]
+        public async Task<IActionResult> GetStudentsByCoachEmail([FromQuery] string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest(new { message = "Email is required." });
+            }
+
+            try
+            {
+                var students = await _UserAppService.GetStudentsByCoachEmailAsync(email);
+
+                if (students == null || !students.Any())
+                {
+                    return NotFound(new { message = "No students found for this coach." });
+                }
+
+                return Ok(students);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
 
     }
 }

@@ -13,6 +13,8 @@ namespace KocCoAPI.API.Mapping
             CreateMap<User, UserInfoDTO>().ReverseMap();
 
             CreateMap<Package, PackageDTO>().ReverseMap();
+
+            CreateMap<User, UserSimpleInfoDTO>().ReverseMap();
         }
 
 
