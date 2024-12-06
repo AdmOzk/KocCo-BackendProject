@@ -250,7 +250,7 @@ namespace KocCoAPI.API.Controllers
                 return BadRequest(new { message = "Fill all data." });
             }
 
-        
+           
 
             // Dosya boyutu kontrolü
             long size = file.Length;
@@ -259,16 +259,58 @@ namespace KocCoAPI.API.Controllers
                 return BadRequest(new { message = "Maximum size can be 20MB." });
             }
 
-            // Dosyayı Base64'e dönüştür
-            using var memoryStream = new MemoryStream();
-            await file.CopyToAsync(memoryStream);
-            var documentBase64 = Convert.ToBase64String(memoryStream.ToArray());
 
-            // Veritabanına kaydet
-            await _UserAppService.UploadSharedResourceAsync(email, packageId, documentBase64, documentName);
+            var memoryStream = new MemoryStream();
+            var documentBase64 = "";
+            try
+            {
+                // Convert file to Base64 string
+                await file.CopyToAsync(memoryStream);
+                documentBase64 = Convert.ToBase64String(memoryStream.ToArray());
+
+                // Upload the shared resource
+                await _UserAppService.UploadSharedResourceAsync(email, packageId, documentBase64, documentName);
+
+                return Ok(new { message = "Document uploaded successfully." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Return 400 Bad Request for expected errors
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Return 500 Internal Server Error for unexpected errors
+                return StatusCode(500, new { message = "An unexpected error occurred.", details = ex.Message });
+            }
 
 
-            return Ok(new { message = "File uploaded successfully.", documentName });
+        }
+
+        [HttpGet("get-shared-resources-for-student")]
+        public async Task<IActionResult> GetSharedResourcesForStudent([FromQuery] string email, [FromQuery] int packageId)
+        {
+            if (string.IsNullOrEmpty(email) || packageId <= 0)
+            {
+                return BadRequest(new { message = "Email and PackageId are required." });
+            }
+
+            try
+            {
+                // Get shared resources for the student and package
+                var sharedResources = await _UserAppService.GetSharedResourcesForStudentAsync(email, packageId);
+
+                if (sharedResources == null || !sharedResources.Any())
+                {
+                    return NotFound(new { message = "No shared resources found for the specified package and user." });
+                }
+
+                return Ok(sharedResources);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
 

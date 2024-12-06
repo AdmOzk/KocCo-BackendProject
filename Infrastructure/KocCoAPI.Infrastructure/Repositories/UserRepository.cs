@@ -166,16 +166,38 @@ namespace KocCoAPI.Infrastructure.Repositories
 
         public async Task AddSharedResourceAsync(int packageId, string documentBase64, string documentName)
         {
-            // Yeni shared resource kaydı oluştur
+            // Check if the document name already exists for the given package
+            bool exists = await _dbContext.SharedResources
+                .AnyAsync(sr => sr.PackageId == packageId && sr.DocumentName == documentName);
+
+            if (exists)
+            {
+                throw new InvalidOperationException("This document name is already used. Please choose a different name.");
+            }
+
+            // Create a new shared resource record
             var sharedResource = new SharedResource
             {
                 PackageId = packageId,
                 Document = documentBase64,
-                DocumentName = documentName // Kullanıcıdan gelen doküman adı
+                DocumentName = documentName // User-provided document name
             };
 
             _dbContext.SharedResources.Add(sharedResource);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<SharedResource>> GetSharedResourcesForStudentAsync(string email, int packageId)
+        {
+            return await _dbContext.UserPurchases
+                .Where(up => up.User.EmailAddress == email && up.PackageID == packageId) // Filter by email and package
+                .Join(
+                    _dbContext.SharedResources, // Join with SharedResources
+                    up => up.PackageID,
+                    sr => sr.PackageId,
+                    (up, sr) => sr // Select the shared resources
+                )
+                .ToListAsync();
         }
 
     }

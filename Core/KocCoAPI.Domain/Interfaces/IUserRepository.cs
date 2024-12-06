@@ -25,5 +25,7 @@ namespace KocCoAPI.Domain.Interfaces
         Task<List<SharedResource>> GetSharedResourcesByCoachEmailAsync(string email);
 
         Task AddSharedResourceAsync(int packageId, string documentBase64, string documentName);
+
+        Task<List<SharedResource>> GetSharedResourcesForStudentAsync(string email, int packageId);
     }
 }

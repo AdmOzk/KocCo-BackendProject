@@ -88,6 +88,11 @@ namespace KocCoAPI.Domain.Services
             await _userRepository.AddSharedResourceAsync(packageId, documentBase64, documentName);
         }
 
+        public async Task<List<SharedResource>> GetSharedResourcesForStudentAsync(string email, int packageId)
+        {
+            return await _userRepository.GetSharedResourcesForStudentAsync(email, packageId);
+        }
+
 
 
 

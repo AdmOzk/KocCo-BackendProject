@@ -123,6 +123,15 @@ namespace KocCoAPI.Application.Services
             await _userService.UploadSharedResourceAsync(email, packageId, documentBase64, documentName);
         }
 
+        public async Task<List<SharedResourceDTO>> GetSharedResourcesForStudentAsync(string email, int packageId)
+        {
+            // Call the service layer to retrieve shared resources
+            var sharedResources = await _userService.GetSharedResourcesForStudentAsync(email, packageId);
+
+            // Map the data to DTO
+            return _mapper.Map<List<SharedResourceDTO>>(sharedResources);
+        }
+
 
     }
 }
