@@ -103,5 +103,26 @@ namespace KocCoAPI.Application.Services
 
             return _mapper.Map<List<UserSimpleInfoDTO>>(students); // User nesnelerini DTO'ya dönüştürüyoruz
         }
+
+        public async Task<List<SharedResourceDTO>> GetSharedResourcesByCoachEmailAsync(string email)
+        {
+            // SharedResource listesini al
+            var sharedResources = await _userService.GetSharedResourcesByCoachEmailAsync(email);
+
+            // SharedResource listesini DTO'ya dönüştür
+            return sharedResources.Select(sr => new SharedResourceDTO
+            {
+                DocumentName = sr.DocumentName,
+                Document = sr.Document // Doküman içeriği
+            }).ToList();
+        }
+
+        public async Task UploadSharedResourceAsync(string email, int packageId, string documentBase64, string documentName)
+        {
+            // Servis katmanına yönlendir
+            await _userService.UploadSharedResourceAsync(email, packageId, documentBase64, documentName);
+        }
+
+
     }
 }

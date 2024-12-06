@@ -145,5 +145,38 @@ namespace KocCoAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<SharedResource>> GetSharedResourcesByCoachEmailAsync(string email)
+        {
+            return await _dbContext.CoachPackages
+                .Join(
+                    _dbContext.Users, // CoachPackages ile Users tablosunu ilişkilendir
+                    cp => cp.CoachId,
+                    u => u.UserId,
+                    (cp, u) => new { CoachPackage = cp, CoachEmail = u.EmailAddress }
+                )
+                .Where(x => x.CoachEmail == email) // Koçun emailine göre filtreleme
+                .Join(
+                    _dbContext.SharedResources, // CoachPackages ile SharedResources'ı ilişkilendir
+                    x => x.CoachPackage.PackageId,
+                    sr => sr.PackageId,
+                    (x, sr) => sr // SharedResource nesnesini al
+                )
+                .ToListAsync();
+        }
+
+        public async Task AddSharedResourceAsync(int packageId, string documentBase64, string documentName)
+        {
+            // Yeni shared resource kaydı oluştur
+            var sharedResource = new SharedResource
+            {
+                PackageId = packageId,
+                Document = documentBase64,
+                DocumentName = documentName // Kullanıcıdan gelen doküman adı
+            };
+
+            _dbContext.SharedResources.Add(sharedResource);
+            await _dbContext.SaveChangesAsync();
+        }
+
     }
 }

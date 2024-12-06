@@ -21,5 +21,9 @@ namespace KocCoAPI.Domain.Interfaces
         Task<decimal> GetCoachIncomeByEmailAsync(string email);
 
         Task<List<User>> GetStudentsByCoachEmailAsync(string email);
+
+        Task<List<SharedResource>> GetSharedResourcesByCoachEmailAsync(string email);
+
+        Task AddSharedResourceAsync(int packageId, string documentBase64, string documentName);
     }
 }

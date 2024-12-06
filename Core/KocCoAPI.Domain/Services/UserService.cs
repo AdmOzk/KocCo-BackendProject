@@ -70,6 +70,24 @@ namespace KocCoAPI.Domain.Services
             return await _userRepository.GetStudentsByCoachEmailAsync(email);
         }
 
+        public async Task<List<SharedResource>> GetSharedResourcesByCoachEmailAsync(string email)
+        {
+            return await _userRepository.GetSharedResourcesByCoachEmailAsync(email);
+        }
+
+        public async Task UploadSharedResourceAsync(string email, int packageId, string documentBase64, string documentName)
+        {
+            // Kullanıcının öğretmen olup olmadığını kontrol et
+            //var isCoach = await _userRepository.IsCoachByEmailAsync(email);
+            //if (!isCoach)
+            //{
+            //    throw new UnauthorizedAccessException("The user is not a coach.");
+            //}
+
+            // Yeni shared resource kaydet
+            await _userRepository.AddSharedResourceAsync(packageId, documentBase64, documentName);
+        }
+
 
 
 

@@ -15,6 +15,8 @@ namespace KocCoAPI.API.Mapping
             CreateMap<Package, PackageDTO>().ReverseMap();
 
             CreateMap<User, UserSimpleInfoDTO>().ReverseMap();
+
+            CreateMap<SharedResource, SharedResourceDTO>().ReverseMap();
         }
 
 

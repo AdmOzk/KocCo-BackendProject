@@ -18,6 +18,10 @@ namespace KocCoAPI.Application.Interfaces
         Task<decimal> GetCoachIncomeByEmailAsync(string email);
 
         Task<List<UserSimpleInfoDTO>> GetStudentsByCoachEmailAsync(string email);
+        Task<List<SharedResourceDTO>> GetSharedResourcesByCoachEmailAsync(string email);
+
+        Task UploadSharedResourceAsync(string email, int packageId, string documentBase64, string documentName);
+
 
     }
 }

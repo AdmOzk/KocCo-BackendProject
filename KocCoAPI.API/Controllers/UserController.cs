@@ -183,6 +183,94 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
+        [HttpGet("get-shared-resources")]
+        public async Task<IActionResult> GetSharedResources([FromQuery] string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest(new { message = "Email is required." });
+            }
+
+            try
+            {
+                // SharedResourceDTO listesini al
+                var resources = await _UserAppService.GetSharedResourcesByCoachEmailAsync(email);
+
+                if (resources == null || !resources.Any())
+                {
+                    return NotFound(new { message = "No shared resources found for this coach." });
+                }
+
+                return Ok(resources); // DTO'ları döndür
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("download-document")]
+        public async Task<IActionResult> DownloadDocument([FromQuery] string email, [FromQuery] string documentName)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(documentName))
+            {
+                return BadRequest(new { message = "Email and document name are required." });
+            }
+
+            try
+            {
+                // SharedResourceDTO listesini alın
+                var resources = await _UserAppService.GetSharedResourcesByCoachEmailAsync(email);
+
+                // Belirtilen dokümanı bul
+                var resource = resources.FirstOrDefault(r => r.DocumentName == documentName);
+
+                if (resource == null)
+                {
+                    return NotFound(new { message = "Document not found." });
+                }
+
+                // Base64'ü byte array'e dönüştür
+                var documentBytes = Convert.FromBase64String(resource.Document);
+
+                // Tarayıcıya dosyayı indirme talimatı ver
+                return File(documentBytes, "application/pdf", $"{documentName}.pdf");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("upload-file")]
+        public async Task<IActionResult> UploadFile(IFormFile file, [FromQuery] string documentName, [FromQuery] int packageId, [FromQuery] string email)
+        {
+            if (string.IsNullOrEmpty(email) || packageId <= 0 || file == null || string.IsNullOrEmpty(documentName))
+            {
+                return BadRequest(new { message = "Fill all data." });
+            }
+
+        
+
+            // Dosya boyutu kontrolü
+            long size = file.Length;
+            if (size > (20 * 1024 * 1024)) // 20 MB
+            {
+                return BadRequest(new { message = "Maximum size can be 20MB." });
+            }
+
+            // Dosyayı Base64'e dönüştür
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+            var documentBase64 = Convert.ToBase64String(memoryStream.ToArray());
+
+            // Veritabanına kaydet
+            await _UserAppService.UploadSharedResourceAsync(email, packageId, documentBase64, documentName);
+
+
+            return Ok(new { message = "File uploaded successfully.", documentName });
+        }
+
 
     }
 }
