@@ -17,6 +17,14 @@ namespace KocCoAPI.API.Mapping
             CreateMap<User, UserSimpleInfoDTO>().ReverseMap();
 
             CreateMap<SharedResource, SharedResourceDTO>().ReverseMap();
+
+            CreateMap<Cart, CartDTO>().ReverseMap();
+
+            CreateMap<CartPackage, CartDTO>()
+    .ForMember(dest => dest.PackageId, opt => opt.MapFrom(src => src.PackageId))
+    .ForMember(dest => dest.PackageName, opt => opt.MapFrom(src => src.Package.PackageName))
+    .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Package.Price))
+    .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Cart.TotalPrice));
         }
 
 

@@ -93,6 +93,33 @@ namespace KocCoAPI.Domain.Services
             return await _userRepository.GetSharedResourcesForStudentAsync(email, packageId);
         }
 
+        public async Task AddToCartAsync(string email, int packageId)
+        {
+            var user = await _userRepository.GetByUserMailToUserAsync(email);
+            if (user == null) throw new InvalidOperationException("User not found.");
+
+            await _userRepository.AddToCartAsync(user.UserId, packageId);
+        }
+
+        public async Task<List<CartPackage>> GetCartDetailsAsync(string email)
+        {
+            var user = await _userRepository.GetByUserMailToUserAsync(email);
+            if (user == null) throw new InvalidOperationException("User not found.");
+
+            return await _userRepository.GetCartDetailsAsync(user.CartId ?? 0);
+        }
+
+        public async Task<string> PurchaseCartAsync(string email, string cardDetails)
+        {
+            var user = await _userRepository.GetByUserMailToUserAsync(email);
+            if (user == null) throw new InvalidOperationException("User not found.");
+
+            return await _userRepository.PurchaseCartAsync(user.CartId ?? 0, user.UserId, cardDetails);
+        }
+
+
+
+
 
 
 

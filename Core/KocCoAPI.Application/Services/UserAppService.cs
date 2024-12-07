@@ -132,6 +132,26 @@ namespace KocCoAPI.Application.Services
             return _mapper.Map<List<SharedResourceDTO>>(sharedResources);
         }
 
+        public async Task AddToCartAsync(string email, int packageId)
+        {
+            await _userService.AddToCartAsync(email, packageId);
+        }
+
+        public async Task<List<CartDTO>> GetCartDetailsAsync(string email)
+        {
+            var cartPackages = await _userService.GetCartDetailsAsync(email);
+            return _mapper.Map<List<CartDTO>>(cartPackages);
+        }
+
+        public async Task<string> PurchaseCartAsync(string email, string cardDetails)
+        {
+            return await _userService.PurchaseCartAsync(email, cardDetails);
+        }
+
+
+
+
+
 
     }
 }

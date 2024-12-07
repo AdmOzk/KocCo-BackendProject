@@ -72,6 +72,9 @@ namespace KocCoAPI.Infrastructure.Persistence
                 .HasOne(up => up.Package)
                 .WithMany()
                 .HasForeignKey(up => up.PackageID);
+
+            modelBuilder.Entity<CartPackage>()
+       .HasKey(cp => new { cp.CartId, cp.PackageId }); // Composite key
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Cart> Carts { get; set; }

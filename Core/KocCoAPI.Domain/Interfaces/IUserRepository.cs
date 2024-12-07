@@ -27,5 +27,9 @@ namespace KocCoAPI.Domain.Interfaces
         Task AddSharedResourceAsync(int packageId, string documentBase64, string documentName);
 
         Task<List<SharedResource>> GetSharedResourcesForStudentAsync(string email, int packageId);
+
+        Task AddToCartAsync(int userId, int packageId);
+        Task<List<CartPackage>> GetCartDetailsAsync(int cartId);
+        Task<string> PurchaseCartAsync(int cartId, int userId, string cardDetails);
     }
 }
