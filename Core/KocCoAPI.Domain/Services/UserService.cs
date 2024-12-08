@@ -117,6 +117,13 @@ namespace KocCoAPI.Domain.Services
             return await _userRepository.PurchaseCartAsync(user.CartId ?? 0, user.UserId, cardDetails);
         }
 
+        public async Task<List<Package>> GetAllPackagesAsync()
+        {
+            return await _userRepository.GetAllPackagesAsync();
+        }
+
+
+
 
 
 

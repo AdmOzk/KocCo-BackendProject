@@ -148,6 +148,12 @@ namespace KocCoAPI.Application.Services
             return await _userService.PurchaseCartAsync(email, cardDetails);
         }
 
+        public async Task<List<PackageDTO>> GetAllPackagesAsync()
+        {
+            var packages = await _userService.GetAllPackagesAsync();
+            return _mapper.Map<List<PackageDTO>>(packages);
+        }
+
 
 
 

@@ -288,6 +288,11 @@ namespace KocCoAPI.Infrastructure.Repositories
             return $"Payment successful. You paid {totalPrice} USD.";
         }
 
+        public async Task<List<Package>> GetAllPackagesAsync()
+        {
+            return await _dbContext.Packages.ToListAsync();
+        }
+
 
 
     }

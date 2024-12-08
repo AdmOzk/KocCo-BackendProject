@@ -28,7 +28,7 @@ namespace KocCoAPI.Application.Interfaces
         Task<List<CartDTO>> GetCartDetailsAsync(string email);
         Task<string> PurchaseCartAsync(string email, string cardDetails);
 
-
+        Task<List<PackageDTO>> GetAllPackagesAsync();
 
 
     }

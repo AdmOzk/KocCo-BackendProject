@@ -313,6 +313,26 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
+        [HttpGet("get-all-packages")]
+        public async Task<IActionResult> GetAllPackages()
+        {
+            try
+            {
+                var packages = await _UserAppService.GetAllPackagesAsync();
+
+                if (packages == null || !packages.Any())
+                {
+                    return NotFound(new { message = "No packages found." });
+                }
+
+                return Ok(packages);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
 
     }
 }
