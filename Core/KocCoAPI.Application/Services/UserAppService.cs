@@ -204,23 +204,40 @@ namespace KocCoAPI.Application.Services
             await _userService.AddTestResultAsync(email, testId, grade);
         }
 
+
+
         public async Task<List<TestResultDTO>> GetTestResultsByEmailAsync(string email)
         {
+            // Kullanıcının StudentId'sini al
             var user = await _userService.GetByUserMailToUserAsync(email);
             if (user == null)
-            {
-                throw new Exception("User not found for the provided email.");
-            }
+                throw new Exception("User not found");
 
+            // Test sonuçlarını al
             var testResults = await _userService.GetTestResultsByStudentIdAsync(user.UserId);
 
-            return testResults.Select(tr => new TestResultDTO
+            // TestName ve StudentName bilgilerini doldur
+            var testResultsWithDetails = new List<TestResultDTO>();
+            foreach (var result in testResults)
             {
-                TestResultId = tr.TestResultId,
-                TestId = tr.TestId,
-                StudentId = tr.StudentId,
-                Grade = tr.Grade
-            }).ToList();
+                // Test bilgisini al
+                var test = await _userService.GetTestByIdAsync(result.TestId);
+
+                // Öğrenci adını al
+                var student = await _userService.GetByUserIdAsync(result.StudentId);
+
+                testResultsWithDetails.Add(new TestResultDTO
+                {
+                    TestResultId = result.TestResultId,
+                    TestId = result.TestId,
+                    StudentId = result.StudentId,
+                    Grade = result.Grade,
+                    TestName = test?.TestName, // TestName olabilir
+                    StudentName = $"{student?.FirstName} {student?.LastName}" // Full Name
+                });
+            }
+
+            return testResultsWithDetails;
         }
 
 

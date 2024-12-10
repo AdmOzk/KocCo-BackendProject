@@ -16,6 +16,9 @@ namespace KocCoAPI.Application.DTOs
 
         public int Grade { get; set; }
 
+        public string TestName { get; set; }
+
+        public string StudentName { get; set; }
 
     }
 }
