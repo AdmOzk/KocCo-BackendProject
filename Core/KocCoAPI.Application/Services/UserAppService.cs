@@ -154,6 +154,52 @@ namespace KocCoAPI.Application.Services
             return _mapper.Map<List<PackageDTO>>(packages);
         }
 
+       
+
+      
+
+     
+
+        public async Task<TestDTO> GetTestByIdAsync(int testId)
+        {
+            var test = await _userService.GetTestByIdAsync(testId);
+            return _mapper.Map<TestDTO>(test);
+        }
+
+        
+
+        public async Task<WorkScheduleDTO> CreateWorkScheduleAsync(WorkScheduleDTO workScheduleDTO)
+        {
+            if (string.IsNullOrEmpty(workScheduleDTO.Email))
+            {
+                throw new ArgumentException("Email is required.");
+            }
+
+            // Delegate to the service
+            await _userService.CreateWorkScheduleAsync(workScheduleDTO.Email, workScheduleDTO.GeneralNotes);
+            return _mapper.Map<WorkScheduleDTO>(workScheduleDTO);
+        }
+
+        public async Task<List<WorkScheduleDTO>> GetWorkSchedulesByEmailAsync(string email)
+        {
+            // Domain'den WorkSchedule entity'sini al
+            var workSchedules = await _userService.GetWorkSchedulesByEmailAsync(email);
+
+            // WorkSchedule entity'lerini DTO'ya dönüştür
+            return workSchedules.Select(ws => new WorkScheduleDTO
+            {
+                Email = email, // Direkt olarak kullanıcının email adresi
+                GeneralNotes = ws.GeneralNotes
+            }).ToList();
+        }
+
+        public async Task<List<CoachInfoDTO>> GetAllCoachesAsync()
+        {
+            var Coaches = await _userService.GetAllCoachesAsync();
+            return _mapper.Map<List<CoachInfoDTO>>(Coaches);
+        }
+
+
 
 
 

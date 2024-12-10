@@ -122,6 +122,49 @@ namespace KocCoAPI.Domain.Services
             return await _userRepository.GetAllPackagesAsync();
         }
 
+     
+
+     
+
+        public async Task<Test> GetTestByIdAsync(int testId)
+        {
+            return await _userRepository.GetTestByIdAsync(testId);
+        }
+
+       
+
+
+
+        public async Task CreateWorkScheduleAsync(string email, string generalNotes)
+        {
+            // Fetch the user by email
+            var user = await _userRepository.GetByUserMailToUserAsync(email);
+            if (user == null)
+            {
+                throw new Exception("User not found for the provided email.");
+            }
+
+            // Create the WorkSchedule entity
+            var workSchedule = new WorkSchedule
+            {
+                StudentId = user.UserId, // Fetch UserId from email
+                GeneralNotes = generalNotes // Provided by frontend
+            };
+
+            // Save the WorkSchedule
+            await _userRepository.CreateWorkScheduleAsync(workSchedule);
+        }
+
+
+        public async Task<List<WorkSchedule>> GetWorkSchedulesByEmailAsync(string email)
+        {
+            return await _userRepository.GetWorkSchedulesByEmailAsync(email);
+        }
+        
+        public async Task<List<User>> GetAllCoachesAsync()
+        {
+            return await _userRepository.GetAllCoachesAsync();
+        }
 
 
 

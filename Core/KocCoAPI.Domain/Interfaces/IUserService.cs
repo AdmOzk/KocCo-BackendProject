@@ -30,5 +30,15 @@ namespace KocCoAPI.Domain.Interfaces
 
         Task<List<Package>> GetAllPackagesAsync();
 
+     
+        Task<Test> GetTestByIdAsync(int testId);
+
+
+        Task CreateWorkScheduleAsync(string email, string generalNotes);
+
+        Task<List<WorkSchedule>> GetWorkSchedulesByEmailAsync(string email);
+
+        Task<List<User>> GetAllCoachesAsync();
+
     }
 }

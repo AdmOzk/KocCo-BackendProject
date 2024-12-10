@@ -1,6 +1,7 @@
 ﻿using KocCoAPI.Application.DTOs;
 using KocCoAPI.Application.Interfaces;
 using KocCoAPI.Application.Services;
+using KocCoAPI.Domain.Interfaces;
 using KocCoAPI.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -332,6 +333,119 @@ namespace KocCoAPI.API.Controllers
                 return StatusCode(500, new { message = ex.Message });
             }
         }
+
+        [HttpGet("get-all-coaches")]
+        public async Task<IActionResult> GetAllCoaches()
+        {
+            try
+            {
+                var coaches = await _UserAppService.GetAllCoachesAsync();
+
+                if (coaches == null || !coaches.Any())
+                {
+                    return NotFound(new { message = "No Coaches found." });
+                }
+
+                return Ok(coaches);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+     
+
+  
+
+        [HttpGet("download-questions-document")]
+        public async Task<IActionResult> DownloadQuestionsDocument([FromQuery] int testId)
+        {
+            if (testId <= 0)
+            {
+                return BadRequest(new { message = "Valid test ID is required." });
+            }
+
+            try
+            {
+                // Test bilgilerini al
+                var test = await _UserAppService.GetTestByIdAsync(testId);
+
+                if (test == null || string.IsNullOrEmpty(test.QuestionsDocument))
+                {
+                    return NotFound(new { message = "Questions document not found for this test." });
+                }
+
+                // Base64'ü byte array'e dönüştür
+                var documentBytes = Convert.FromBase64String(test.QuestionsDocument);
+
+                // Tarayıcıya dosyayı indirme talimatı ver
+                return File(documentBytes, "application/pdf", $"{test.TestName}_Questions.pdf");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        
+
+        [HttpPost("create-work-schedule")]
+        public async Task<IActionResult> CreateWorkSchedule([FromBody] WorkScheduleDTO workScheduleDTO)
+        {
+            if (workScheduleDTO == null || string.IsNullOrEmpty(workScheduleDTO.Email))
+            {
+                return BadRequest(new { message = "Email and GeneralNotes are required." });
+            }
+
+            try
+            {
+                var createdSchedule = await _UserAppService.CreateWorkScheduleAsync(workScheduleDTO);
+                return Ok(new { message = "WorkSchedule created successfully.", data = createdSchedule });
+            }
+            catch (ArgumentException ex)
+            {
+                // Kullanıcı hataları için 400 döner
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Genel bir hata durumu için
+                return StatusCode(500, new
+                {
+                    message = "An error occurred while creating the work schedule.",
+                    details = ex.Message,
+                    innerException = ex.InnerException?.Message
+                });
+            }
+        }
+
+        [HttpGet("get-work-schedules")]
+        public async Task<IActionResult> GetWorkSchedulesByEmail([FromQuery] string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest(new { message = "Email is required." });
+            }
+
+            try
+            {
+                var workSchedules = await _UserAppService.GetWorkSchedulesByEmailAsync(email);
+
+                if (workSchedules == null || !workSchedules.Any())
+                {
+                    return NotFound(new { message = "No work schedules found for this user." });
+                }
+
+                return Ok(workSchedules);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred.", details = ex.Message });
+            }
+        }
+
+
 
 
     }

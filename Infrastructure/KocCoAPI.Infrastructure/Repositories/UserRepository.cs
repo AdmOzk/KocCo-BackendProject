@@ -293,7 +293,47 @@ namespace KocCoAPI.Infrastructure.Repositories
             return await _dbContext.Packages.ToListAsync();
         }
 
+       
 
+     
+
+       
+
+        public async Task<Test> GetTestByIdAsync(int testId)
+        {
+            return await _dbContext.Tests.FirstOrDefaultAsync(t => t.TestId == testId);
+        }
+
+        public async Task UpdateTestAsync(Test test)
+        {
+            _dbContext.Tests.Update(test);
+            await _dbContext.SaveChangesAsync();
+        }
+
+     
+      
+        public async Task CreateWorkScheduleAsync(WorkSchedule workSchedule)
+        {
+            await _dbContext.WorkSchedules.AddAsync(workSchedule);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<WorkSchedule>> GetWorkSchedulesByEmailAsync(string email)
+        {
+            return await _dbContext.WorkSchedules
+                .Join(_dbContext.Users,
+                      ws => ws.StudentId,
+                      u => u.UserId,
+                      (ws, u) => new { WorkSchedule = ws, User = u })
+                .Where(joined => joined.User.EmailAddress == email)
+                .Select(joined => joined.WorkSchedule)
+                .ToListAsync();
+        }
+
+        public async Task<List<User>> GetAllCoachesAsync()
+        {
+            return await _dbContext.Users.Where(u=>u.Roles.Contains("Coach")).ToListAsync();
+        }
 
     }
 }

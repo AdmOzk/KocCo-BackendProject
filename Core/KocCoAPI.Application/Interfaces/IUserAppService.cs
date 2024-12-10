@@ -1,5 +1,6 @@
 ﻿using KocCoAPI.Application.DTOs;
 
+
 namespace KocCoAPI.Application.Interfaces
 {
     public interface IUserAppService
@@ -29,6 +30,19 @@ namespace KocCoAPI.Application.Interfaces
         Task<string> PurchaseCartAsync(string email, string cardDetails);
 
         Task<List<PackageDTO>> GetAllPackagesAsync();
+
+    
+
+        Task<TestDTO> GetTestByIdAsync(int testId);
+
+
+        Task<WorkScheduleDTO> CreateWorkScheduleAsync(WorkScheduleDTO workScheduleDTO);
+
+        Task<List<WorkScheduleDTO>> GetWorkSchedulesByEmailAsync(string email);
+
+        Task<List<CoachInfoDTO>> GetAllCoachesAsync();
+
+
 
 
     }

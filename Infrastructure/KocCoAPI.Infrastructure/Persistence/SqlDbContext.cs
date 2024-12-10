@@ -61,11 +61,26 @@ namespace KocCoAPI.Infrastructure.Persistence
             modelBuilder.Entity<WorkSchedule>()
                 .HasKey(c => c.WorkScheduleId);
 
+            modelBuilder.Entity<TestStudent>()
+    .HasKey(ts => new { ts.TestId, ts.StudentId }); // Composite key
+
+            modelBuilder.Entity<TestStudent>()
+                .HasOne(ts => ts.Test)
+                .WithMany(t => t.TestStudents)
+                .HasForeignKey(ts => ts.TestId);
+
+            modelBuilder.Entity<TestStudent>()
+                .HasOne(ts => ts.User)
+                .WithMany(u => u.TestStudents)
+                .HasForeignKey(ts => ts.StudentId);
+
             // User -> UserPurchases (Bir Kullanıcı Birçok Satın Alım Yapabilir)
             modelBuilder.Entity<UserPurchased>()
                 .HasOne(up => up.User)
                 .WithMany(u => u.UserPurchases)
                 .HasForeignKey(up => up.StudentID);
+
+           
 
             // UserPurchased -> Package (Bir Satın Alımda Bir Paket Olabilir)
             modelBuilder.Entity<UserPurchased>()
@@ -73,9 +88,14 @@ namespace KocCoAPI.Infrastructure.Persistence
                 .WithMany()
                 .HasForeignKey(up => up.PackageID);
 
+            modelBuilder.Entity<TestStudent>()
+    .HasKey(ts => new { ts.TestId, ts.StudentId }); // Composite key
+
             modelBuilder.Entity<CartPackage>()
        .HasKey(cp => new { cp.CartId, cp.PackageId }); // Composite key
         }
+
+
         public DbSet<User> Users { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartPackage> CartPackages { get; set; }

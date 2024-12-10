@@ -32,5 +32,18 @@ namespace KocCoAPI.Domain.Interfaces
         Task<List<CartPackage>> GetCartDetailsAsync(int cartId);
         Task<string> PurchaseCartAsync(int cartId, int userId, string cardDetails);
         Task<List<Package>> GetAllPackagesAsync();
+
+     
+
+        Task<Test> GetTestByIdAsync(int testId);
+        Task UpdateTestAsync(Test test);
+
+
+        Task CreateWorkScheduleAsync(WorkSchedule workSchedule);
+
+        Task<List<WorkSchedule>> GetWorkSchedulesByEmailAsync(string email);
+
+        Task<List<User>> GetAllCoachesAsync();
+
     }
 }
