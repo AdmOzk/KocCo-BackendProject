@@ -24,6 +24,8 @@ namespace KocCoAPI.API.Mapping
 
             CreateMap<Test, TestDTO>().ReverseMap();
 
+            CreateMap<TestResult, TestResultDTO>().ReverseMap();
+
 
             CreateMap<WorkScheduleDTO, WorkSchedule>().ReverseMap();
 

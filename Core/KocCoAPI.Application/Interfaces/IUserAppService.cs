@@ -42,6 +42,9 @@ namespace KocCoAPI.Application.Interfaces
 
         Task<List<CoachInfoDTO>> GetAllCoachesAsync();
 
+        Task AddTestResultAsync(string email, int testId, int grade);
+        Task<List<TestResultDTO>> GetTestResultsByEmailAsync(string email);
+
 
 
 

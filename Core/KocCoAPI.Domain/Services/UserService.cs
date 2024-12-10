@@ -166,6 +166,32 @@ namespace KocCoAPI.Domain.Services
             return await _userRepository.GetAllCoachesAsync();
         }
 
+        public async Task AddTestResultAsync(string email, int testId, int grade)
+        {
+            // Email üzerinden UserId alınıyor
+            var userId = await _userRepository.GetByUserMailToUserAsync(email);
+            if (userId == null)
+            {
+                throw new Exception("User not found with the provided email.");
+            }
+
+            // TestResult nesnesi oluşturuluyor
+            var testResult = new TestResult
+            {
+                TestId = testId,
+                StudentId = userId.UserId,
+                Grade = grade
+            };
+
+            // TestResult kaydı ekleniyor
+            await _userRepository.AddTestResultAsync(testResult);
+        }
+
+        public async Task<List<TestResult>> GetTestResultsByStudentIdAsync(int studentId)
+        {
+            return await _userRepository.GetTestResultsByStudentIdAsync(studentId);
+        }
+
 
 
 

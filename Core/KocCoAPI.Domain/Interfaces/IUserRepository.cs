@@ -45,5 +45,8 @@ namespace KocCoAPI.Domain.Interfaces
 
         Task<List<User>> GetAllCoachesAsync();
 
+        Task AddTestResultAsync(TestResult testResult);
+        Task<List<TestResult>> GetTestResultsByStudentIdAsync(int studentId);
+
     }
 }

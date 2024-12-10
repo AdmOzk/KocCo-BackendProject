@@ -55,6 +55,9 @@ namespace KocCoAPI.Infrastructure.Persistence
             modelBuilder.Entity<TestStudent>()
                 .HasNoKey();
 
+            modelBuilder.Entity<TestResult>()
+              .HasNoKey();
+
             modelBuilder.Entity<TimeSlot>()
                 .HasKey(c => c.TimeSlotID);
 
@@ -80,7 +83,10 @@ namespace KocCoAPI.Infrastructure.Persistence
                 .WithMany(u => u.UserPurchases)
                 .HasForeignKey(up => up.StudentID);
 
-           
+            modelBuilder.Entity<TestResult>()
+           .HasKey(tr => tr.TestResultId); // Birincil anahtar olarak tanımlar
+
+
 
             // UserPurchased -> Package (Bir Satın Alımda Bir Paket Olabilir)
             modelBuilder.Entity<UserPurchased>()
@@ -109,5 +115,7 @@ namespace KocCoAPI.Infrastructure.Persistence
         public DbSet<TimeSlot> TimeSlots { get; set; }
         public DbSet<UserPurchased> UserPurchases { get; set; }
         public DbSet<WorkSchedule> WorkSchedules { get; set; }
+
+        public DbSet<TestResult> TestResults { get; set; }
     }
 }

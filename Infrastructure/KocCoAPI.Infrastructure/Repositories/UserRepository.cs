@@ -335,5 +335,18 @@ namespace KocCoAPI.Infrastructure.Repositories
             return await _dbContext.Users.Where(u=>u.Roles.Contains("Coach")).ToListAsync();
         }
 
+        public async Task AddTestResultAsync(TestResult testResult)
+        {
+            await _dbContext.TestResults.AddAsync(testResult);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<TestResult>> GetTestResultsByStudentIdAsync(int studentId)
+        {
+            return await _dbContext.TestResults
+                .Where(tr => tr.StudentId == studentId)
+                .ToListAsync();
+        }
+
     }
 }

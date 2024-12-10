@@ -4,6 +4,7 @@ using KocCoAPI.Application.Services;
 using KocCoAPI.Domain.Interfaces;
 using KocCoAPI.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace KocCoAPI.API.Controllers
 {
@@ -444,6 +445,65 @@ namespace KocCoAPI.API.Controllers
                 return StatusCode(500, new { message = "An error occurred.", details = ex.Message });
             }
         }
+
+        [HttpPost("add-test-result")]
+        public async Task<IActionResult> AddTestResult([FromQuery] string email, [FromQuery] int testId, [FromQuery] int grade)
+        {
+            if (string.IsNullOrEmpty(email) || testId <= 0 || grade < 0)
+            {
+                return BadRequest(new { message = "Email, TestId, and Grade are required fields." });
+            }
+
+            try
+            {
+                await _UserAppService.AddTestResultAsync(email, testId, grade);
+                return Ok(new { message = "Test result added successfully." });
+            }
+            catch (DbUpdateException ex)
+            {
+                var innerExceptionMessage = ex.InnerException?.Message ?? "No inner exception message.";
+                return StatusCode(500, new
+                {
+                    message = "An error occurred while saving the entity changes.",
+                    details = ex.Message,
+                    innerException = innerExceptionMessage
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "An unexpected error occurred.",
+                    details = ex.Message
+                });
+            }
+        }
+
+        [HttpGet("get-test-results-by-email")]
+        public async Task<IActionResult> GetTestResultsByEmail([FromQuery] string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest(new { message = "Email is required." });
+            }
+
+            try
+            {
+                var results = await _UserAppService.GetTestResultsByEmailAsync(email);
+                if (results == null || !results.Any())
+                {
+                    return NotFound(new { message = "No test results found for this user." });
+                }
+
+                return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+
 
 
 

@@ -199,6 +199,30 @@ namespace KocCoAPI.Application.Services
             return _mapper.Map<List<CoachInfoDTO>>(Coaches);
         }
 
+        public async Task AddTestResultAsync(string email, int testId, int grade)
+        {
+            await _userService.AddTestResultAsync(email, testId, grade);
+        }
+
+        public async Task<List<TestResultDTO>> GetTestResultsByEmailAsync(string email)
+        {
+            var user = await _userService.GetByUserMailToUserAsync(email);
+            if (user == null)
+            {
+                throw new Exception("User not found for the provided email.");
+            }
+
+            var testResults = await _userService.GetTestResultsByStudentIdAsync(user.UserId);
+
+            return testResults.Select(tr => new TestResultDTO
+            {
+                TestResultId = tr.TestResultId,
+                TestId = tr.TestId,
+                StudentId = tr.StudentId,
+                Grade = tr.Grade
+            }).ToList();
+        }
+
 
 
 
