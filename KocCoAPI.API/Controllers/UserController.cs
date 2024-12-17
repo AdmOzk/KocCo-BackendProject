@@ -318,6 +318,7 @@ namespace KocCoAPI.API.Controllers
         [HttpGet("get-all-packages")]
         public async Task<IActionResult> GetAllPackages()
         {
+            //ornek
             try
             {
                 var packages = await _UserAppService.GetAllPackagesAsync();
