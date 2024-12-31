@@ -50,6 +50,11 @@ namespace KocCoAPI.Domain.Services
             return await _userRepository.GetUserPackagesByEmailAsync(email);
         }
 
+        public async Task<List<Package>> GetCoachPackagesAsync(string email)
+        {
+            return await _userRepository.GetCoachPackagesAsync(email);
+        }
+
         public async Task UpdatePackageAsync(Package package)
         {
             await _userRepository.UpdatePackageAsync(package);
@@ -122,17 +127,11 @@ namespace KocCoAPI.Domain.Services
             return await _userRepository.GetAllPackagesAsync();
         }
 
-     
-
-     
 
         public async Task<Test> GetTestByIdAsync(int testId)
         {
             return await _userRepository.GetTestByIdAsync(testId);
         }
-
-       
-
 
 
         public async Task CreateWorkScheduleAsync(string email, string generalNotes)
@@ -160,7 +159,7 @@ namespace KocCoAPI.Domain.Services
         {
             return await _userRepository.GetWorkSchedulesByEmailAsync(email);
         }
-        
+
         public async Task<List<User>> GetAllCoachesAsync()
         {
             return await _userRepository.GetAllCoachesAsync();
@@ -191,12 +190,6 @@ namespace KocCoAPI.Domain.Services
         {
             return await _userRepository.GetTestResultsByStudentIdAsync(studentId);
         }
-
-
-
-
-
-
 
 
 

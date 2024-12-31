@@ -1,5 +1,4 @@
-﻿using KocCoAPI.Application.DTOs;
-using KocCoAPI.Domain.Entities;
+﻿using KocCoAPI.Domain.Entities;
 using KocCoAPI.Domain.Interfaces;
 using KocCoAPI.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -51,7 +50,7 @@ namespace KocCoAPI.Infrastructure.Repositories
             return await _dbContext.Users.AnyAsync(u => u.EmailAddress == userMail);
         }
 
-        
+
 
         public async Task<User> GetByUserMailToUserAsync(string userMail)
         {
@@ -67,6 +66,15 @@ namespace KocCoAPI.Infrastructure.Repositories
                 .Where(up => up.User.EmailAddress == email) // Kullanıcı emailine göre filtreleme
                 .Select(up => up.Package) // Sadece Package nesnesini seçiyoruz
                 .ToListAsync();
+        }
+
+        public async Task<List<Package>> GetCoachPackagesAsync(string email)
+        {
+            return await (from cp in _dbContext.CoachPackages
+                          join u in _dbContext.Users on cp.CoachId equals u.UserId
+                          join p in _dbContext.Packages on cp.PackageId equals p.PackageID
+                          where u.EmailAddress == email && u.Roles == "Coach"
+                          select p).ToListAsync();
         }
 
         public async Task UpdatePackageAsync(Package package)
@@ -285,19 +293,13 @@ namespace KocCoAPI.Infrastructure.Repositories
             }
 
             await _dbContext.SaveChangesAsync();
-            return $"Payment successful. You paid {totalPrice} USD.";
+            return $"Payment successful. You paid {totalPrice} TL.";
         }
 
         public async Task<List<Package>> GetAllPackagesAsync()
         {
             return await _dbContext.Packages.ToListAsync();
         }
-
-       
-
-     
-
-       
 
         public async Task<Test> GetTestByIdAsync(int testId)
         {
@@ -310,8 +312,6 @@ namespace KocCoAPI.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-     
-      
         public async Task CreateWorkScheduleAsync(WorkSchedule workSchedule)
         {
             await _dbContext.WorkSchedules.AddAsync(workSchedule);
@@ -332,7 +332,7 @@ namespace KocCoAPI.Infrastructure.Repositories
 
         public async Task<List<User>> GetAllCoachesAsync()
         {
-            return await _dbContext.Users.Where(u=>u.Roles.Contains("Coach")).ToListAsync();
+            return await _dbContext.Users.Where(u => u.Roles.Contains("Coach")).ToListAsync();
         }
 
         public async Task AddTestResultAsync(TestResult testResult)

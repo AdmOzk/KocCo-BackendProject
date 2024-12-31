@@ -70,6 +70,15 @@ namespace KocCoAPI.Application.Services
             return _mapper.Map<List<PackageDTO>>(userPackages);
         }
 
+        public async Task<List<PackageDTO>> GetCoachPackagesAsync(string email)
+        {
+            // Kullanıcının paketlerini repository üzerinden al
+            var coachPackages = await _userService.GetCoachPackagesAsync(email);
+
+            // Listeyi DTO'ya dönüştür
+            return _mapper.Map<List<PackageDTO>>(coachPackages);
+        }
+
         public async Task<bool> UpdatePackageAsync(PackageDTO packageDto)
         {
             // DTO'dan Package nesnesine dönüşüm
@@ -154,19 +163,11 @@ namespace KocCoAPI.Application.Services
             return _mapper.Map<List<PackageDTO>>(packages);
         }
 
-       
-
-      
-
-     
-
         public async Task<TestDTO> GetTestByIdAsync(int testId)
         {
             var test = await _userService.GetTestByIdAsync(testId);
             return _mapper.Map<TestDTO>(test);
         }
-
-        
 
         public async Task<WorkScheduleDTO> CreateWorkScheduleAsync(WorkScheduleDTO workScheduleDTO)
         {
@@ -193,6 +194,7 @@ namespace KocCoAPI.Application.Services
             }).ToList();
         }
 
+
         public async Task<List<CoachInfoDTO>> GetAllCoachesAsync()
         {
             var Coaches = await _userService.GetAllCoachesAsync();
@@ -203,8 +205,6 @@ namespace KocCoAPI.Application.Services
         {
             await _userService.AddTestResultAsync(email, testId, grade);
         }
-
-
 
         public async Task<List<TestResultDTO>> GetTestResultsByEmailAsync(string email)
         {
@@ -239,10 +239,6 @@ namespace KocCoAPI.Application.Services
 
             return testResultsWithDetails;
         }
-
-
-
-
 
 
 

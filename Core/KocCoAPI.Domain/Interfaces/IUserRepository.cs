@@ -14,12 +14,12 @@ namespace KocCoAPI.Domain.Interfaces
 
         Task<List<Package>> GetUserPackagesByEmailAsync(string email);
 
+        Task<List<Package>> GetCoachPackagesAsync(string email);
+
         Task UpdatePackageAsync(Package package);
 
         Task<Package> GetPackageByIdAsync(int packageId);
-
         Task<decimal> GetCoachIncomeByEmailAsync(string email);
-
         Task<List<User>> GetStudentsByCoachEmailAsync(string email);
 
         Task<List<SharedResource>> GetSharedResourcesByCoachEmailAsync(string email);
@@ -31,13 +31,13 @@ namespace KocCoAPI.Domain.Interfaces
         Task AddToCartAsync(int userId, int packageId);
         Task<List<CartPackage>> GetCartDetailsAsync(int cartId);
         Task<string> PurchaseCartAsync(int cartId, int userId, string cardDetails);
+
         Task<List<Package>> GetAllPackagesAsync();
 
-     
+
 
         Task<Test> GetTestByIdAsync(int testId);
         Task UpdateTestAsync(Test test);
-
 
         Task CreateWorkScheduleAsync(WorkSchedule workSchedule);
 

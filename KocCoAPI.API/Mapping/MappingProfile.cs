@@ -16,6 +16,8 @@ namespace KocCoAPI.API.Mapping
 
             CreateMap<Package, PackageDTO>().ReverseMap();
 
+            CreateMap<Package, UserPackageDTO>().ReverseMap();
+
             CreateMap<User, UserSimpleInfoDTO>().ReverseMap();
 
             CreateMap<SharedResource, SharedResourceDTO>().ReverseMap();
@@ -24,7 +26,14 @@ namespace KocCoAPI.API.Mapping
 
             CreateMap<Test, TestDTO>().ReverseMap();
 
+
+            CreateMap<WorkScheduleDTO, WorkSchedule>().ReverseMap();
+
             CreateMap<TestResult, TestResultDTO>().ReverseMap();
+
+            CreateMap<WorkScheduleDTO, WorkSchedule>()
+           .ForMember(dest => dest.WorkScheduleId, opt => opt.Ignore()) // Auto-incremented by DB
+           .ForMember(dest => dest.StudentId, opt => opt.Ignore()); // Will be set manually
 
 
             CreateMap<WorkScheduleDTO, WorkSchedule>().ReverseMap();
@@ -32,8 +41,6 @@ namespace KocCoAPI.API.Mapping
             CreateMap<WorkScheduleDTO, WorkSchedule>()
            .ForMember(dest => dest.WorkScheduleId, opt => opt.Ignore()) // Auto-incremented by DB
            .ForMember(dest => dest.StudentId, opt => opt.Ignore()); // Will be set manually
-        
-
 
             CreateMap<CartPackage, CartDTO>()
     .ForMember(dest => dest.PackageId, opt => opt.MapFrom(src => src.PackageId))
@@ -41,8 +48,5 @@ namespace KocCoAPI.API.Mapping
     .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Package.Price))
     .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Cart.TotalPrice));
         }
-
-
-
     }
 }

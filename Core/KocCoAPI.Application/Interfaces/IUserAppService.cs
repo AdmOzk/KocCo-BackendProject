@@ -1,6 +1,5 @@
 ﻿using KocCoAPI.Application.DTOs;
 
-
 namespace KocCoAPI.Application.Interfaces
 {
     public interface IUserAppService
@@ -14,11 +13,12 @@ namespace KocCoAPI.Application.Interfaces
         Task<UserDTO> GetByUserMailToUserAsync(string userMail);
         Task<UserInfoDTO> GetBasicInfoByUserMailAsync(string userMail);
         Task<List<PackageDTO>> GetUserPackagesByEmailAsync(string userMail);
+        Task<List<PackageDTO>> GetCoachPackagesAsync(string email);
         Task<PackageDTO> GetPackageByIdAsync(int packageId);
         Task<bool> UpdatePackageAsync(PackageDTO packageDto);
         Task<decimal> GetCoachIncomeByEmailAsync(string email);
-
         Task<List<UserSimpleInfoDTO>> GetStudentsByCoachEmailAsync(string email);
+
         Task<List<SharedResourceDTO>> GetSharedResourcesByCoachEmailAsync(string email);
 
         Task UploadSharedResourceAsync(string email, int packageId, string documentBase64, string documentName);
@@ -31,11 +31,7 @@ namespace KocCoAPI.Application.Interfaces
 
         Task<List<PackageDTO>> GetAllPackagesAsync();
 
-    
-
         Task<TestDTO> GetTestByIdAsync(int testId);
-
-
         Task<WorkScheduleDTO> CreateWorkScheduleAsync(WorkScheduleDTO workScheduleDTO);
 
         Task<List<WorkScheduleDTO>> GetWorkSchedulesByEmailAsync(string email);
@@ -44,9 +40,5 @@ namespace KocCoAPI.Application.Interfaces
 
         Task AddTestResultAsync(string email, int testId, int grade);
         Task<List<TestResultDTO>> GetTestResultsByEmailAsync(string email);
-
-
-
-
     }
 }

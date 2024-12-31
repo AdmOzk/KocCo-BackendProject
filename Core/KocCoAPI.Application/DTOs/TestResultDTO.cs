@@ -20,5 +20,6 @@ namespace KocCoAPI.Application.DTOs
 
         public string StudentName { get; set; }
 
+
     }
 }

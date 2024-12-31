@@ -9,13 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{0C074EB4-B59D-4CFC-A948-864C33528A0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KocCoAPI.Application", "Core\KocCoAPI.Application\KocCoAPI.Application.csproj", "{7CCFF5F2-66FE-4BCC-A16E-162B52B7A4A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KocCoAPI.Application", "Core\KocCoAPI.Application\KocCoAPI.Application.csproj", "{7CCFF5F2-66FE-4BCC-A16E-162B52B7A4A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KocCoAPI.Domain", "Core\KocCoAPI.Domain\KocCoAPI.Domain.csproj", "{EDEC4161-FE80-48C7-B395-6BC6997F332F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KocCoAPI.Domain", "Core\KocCoAPI.Domain\KocCoAPI.Domain.csproj", "{EDEC4161-FE80-48C7-B395-6BC6997F332F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KocCoAPI.Infrastructure", "Infrastructure\KocCoAPI.Infrastructure\KocCoAPI.Infrastructure.csproj", "{A4288670-3408-40E1-B580-271634F8C0A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KocCoAPI.Infrastructure", "Infrastructure\KocCoAPI.Infrastructure\KocCoAPI.Infrastructure.csproj", "{A4288670-3408-40E1-B580-271634F8C0A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KocCoAPI.API", "KocCoAPI.API\KocCoAPI.API.csproj", "{4B2C1EFF-0F9E-4295-905E-2790283E9986}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KocCoAPI.API", "KocCoAPI.API\KocCoAPI.API.csproj", "{4B2C1EFF-0F9E-4295-905E-2790283E9986}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

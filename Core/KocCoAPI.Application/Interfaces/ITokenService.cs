@@ -5,7 +5,7 @@ namespace KocCoAPI.Application.Interfaces
 {
     public interface ITokenService
     {
-        string GenerateToken(UserDTO userDto);
+        string GenerateToken(LoginRequestDTO loginRequestDto, string role);
         RefreshToken GenerateRefreshToken();
     }
 }

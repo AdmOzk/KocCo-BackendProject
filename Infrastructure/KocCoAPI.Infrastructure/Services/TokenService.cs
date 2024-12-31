@@ -18,36 +18,41 @@ namespace KocCoAPI.Infrastructure.Services
             _configuration = configuration;
         }
 
-        public string GenerateToken(UserDTO userDto)
+        public string GenerateToken(LoginRequestDTO loginRequestDto, string role)
         {
-            // Token oluşturma mantığı
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]); // appsettings.json'dan alınan gizli anahtar
+            if (loginRequestDto == null)
+            {
+                throw new ArgumentNullException(nameof(loginRequestDto), "Login request cannot be null.");
+            }
 
-            // Kullanıcının rollerini burada alıyoruz
-            var roles = userDto.Roles; // customerDto içerisinde rollerin olduğu bir alan olmalı
+            if (string.IsNullOrEmpty(loginRequestDto.EmailAdress))
+            {
+                throw new ArgumentException("Username cannot be null or empty.", nameof(loginRequestDto.EmailAdress));
+            }
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = _configuration["Jwt:Key"];
+
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new InvalidOperationException("JWT key is not configured.");
+            }
 
             var claims = new ClaimsIdentity(new[]
             {
-                new Claim(ClaimTypes.Name, userDto.EmailAddress), // Email veya diğer kullanıcı bilgileri
-                new Claim(ClaimTypes.NameIdentifier, userDto.UserId.ToString()), // Kullanıcı ID'si
+                new Claim(ClaimTypes.Name, loginRequestDto.EmailAdress),
+                new Claim(ClaimTypes.Role, role)
             });
-
-            // Roller ekleniyor
-            foreach (var role in roles)
-            {
-                claims.AddClaim(new Claim(ClaimTypes.Role, role.ToString()));
-            }
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claims,
-                Expires = DateTime.UtcNow.AddHours(1), // Token geçerlilik süresi
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token); // Oluşturulan token'ı döndür
+            return tokenHandler.WriteToken(token);
         }
 
         public RefreshToken GenerateRefreshToken()

@@ -1,10 +1,11 @@
 ﻿using KocCoAPI.Application.DTOs;
 using KocCoAPI.Application.Interfaces;
 using KocCoAPI.Application.Services;
-using KocCoAPI.Domain.Interfaces;
 using KocCoAPI.Domain.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace KocCoAPI.API.Controllers
 {
@@ -13,20 +14,22 @@ namespace KocCoAPI.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserAppService _UserAppService;
-        
+
 
         public UserController(IUserAppService UserAppService)
         {
             _UserAppService = UserAppService;
-         
+
         }
 
         [HttpGet("get-by-email")]
-        public async Task<IActionResult> GetUserByEmail([FromQuery] string email)
+        public async Task<IActionResult> GetUserByEmail()
         {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+
             if (string.IsNullOrEmpty(email))
             {
-                return BadRequest(new { message = "Email is required." });
+                return Unauthorized();
             }
 
             try
@@ -45,12 +48,15 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
+        [Authorize(Roles = "User,Coach")]
         [HttpGet("get-userInfo")]
-        public async Task<IActionResult> GetBasicInfoByEmail([FromQuery] string email)
+        public async Task<IActionResult> GetBasicInfoByEmail()
         {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+
             if (string.IsNullOrEmpty(email))
             {
-                return BadRequest(new { message = "Email is required." });
+                return Unauthorized();
             }
 
             try
@@ -69,83 +75,17 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
+       
 
-
-        [HttpGet("get-my-packages")]
-        public async Task<IActionResult> GetMyPackages([FromQuery] string email)
-        {
-            if (string.IsNullOrEmpty(email))
-            {
-                return BadRequest(new { message = "Email is required." });
-            }
-
-            try
-            {
-                var packages = await _UserAppService.GetUserPackagesByEmailAsync(email);
-                if (packages == null || !packages.Any())
-                {
-                    return NotFound(new { message = "No packages found for this user." });
-                }
-
-                return Ok(packages);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = ex.Message });
-            }
-        }
-
-        [HttpGet("get-package-by-id")]
-        public async Task<IActionResult> GetPackageById([FromQuery] int packageId)
-        {
-            if (packageId <= 0)
-            {
-                return BadRequest(new { message = "Invalid package ID." });
-            }
-
-            try
-            {
-                var package = await _UserAppService.GetPackageByIdAsync(packageId);
-
-                if (package == null)
-                {
-                    return NotFound(new { message = "Package not found." });
-                }
-
-                return Ok(package);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = ex.Message });
-            }
-        }
-
-        [HttpPut("update-package")]
-        public async Task<IActionResult> UpdatePackage([FromBody] PackageDTO packageDto)
-        {
-            if (packageDto == null || packageDto.PackageID <= 0)
-            {
-                return BadRequest(new { message = "Invalid package details." });
-            }
-
-            try
-            {
-                await _UserAppService.UpdatePackageAsync(packageDto);
-
-                return Ok(new { message = "Package updated successfully." });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = ex.Message });
-            }
-        }
-
+        [Authorize(Roles = "Coach")]
         [HttpGet("my-income")]
-        public async Task<IActionResult> GetMyIncome([FromQuery] string email)
+        public async Task<IActionResult> GetMyIncome()
         {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+
             if (string.IsNullOrEmpty(email))
             {
-                return BadRequest(new { message = "Email is required." });
+                return Unauthorized();
             }
 
             try
@@ -160,12 +100,15 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
+        [Authorize(Roles = "Coach")]
         [HttpGet("get-students-by-coach-email")]
-        public async Task<IActionResult> GetStudentsByCoachEmail([FromQuery] string email)
+        public async Task<IActionResult> GetStudentsByCoachEmail()
         {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+
             if (string.IsNullOrEmpty(email))
             {
-                return BadRequest(new { message = "Email is required." });
+                return Unauthorized();
             }
 
             try
@@ -185,12 +128,15 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
+        [Authorize(Roles = "User,Coach")]
         [HttpGet("get-shared-resources")]
-        public async Task<IActionResult> GetSharedResources([FromQuery] string email)
+        public async Task<IActionResult> GetWorkSchedulesByEmail([FromQuery] string email)
         {
+          
+
             if (string.IsNullOrEmpty(email))
             {
-                return BadRequest(new { message = "Email is required." });
+                return Unauthorized();
             }
 
             try
@@ -211,12 +157,15 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
+        [Authorize(Roles = "User,Coach")]
         [HttpGet("download-document")]
-        public async Task<IActionResult> DownloadDocument([FromQuery] string email, [FromQuery] string documentName)
+        public async Task<IActionResult> DownloadDocument([FromQuery] string documentName)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(documentName))
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (string.IsNullOrEmpty(email))
             {
-                return BadRequest(new { message = "Email and document name are required." });
+                return Unauthorized();
             }
 
             try
@@ -244,15 +193,23 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
+        [Authorize(Roles = "Coach")]
         [HttpPost("upload-file")]
-        public async Task<IActionResult> UploadFile(IFormFile file, [FromQuery] string documentName, [FromQuery] int packageId, [FromQuery] string email)
+        public async Task<IActionResult> UploadFile(IFormFile file, [FromQuery] string documentName, [FromQuery] int packageId)
         {
-            if (string.IsNullOrEmpty(email) || packageId <= 0 || file == null || string.IsNullOrEmpty(documentName))
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return Unauthorized();
+            }
+
+            if (packageId <= 0 || file == null || string.IsNullOrEmpty(documentName))
             {
                 return BadRequest(new { message = "Fill all data." });
             }
 
-           
+
 
             // Dosya boyutu kontrolü
             long size = file.Length;
@@ -289,10 +246,18 @@ namespace KocCoAPI.API.Controllers
 
         }
 
+        [Authorize(Roles = "User")]
         [HttpGet("get-shared-resources-for-student")]
-        public async Task<IActionResult> GetSharedResourcesForStudent([FromQuery] string email, [FromQuery] int packageId)
+        public async Task<IActionResult> GetSharedResourcesForStudent([FromQuery] int packageId)
         {
-            if (string.IsNullOrEmpty(email) || packageId <= 0)
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return Unauthorized();
+            }
+
+            if (packageId <= 0)
             {
                 return BadRequest(new { message = "Email and PackageId are required." });
             }
@@ -313,32 +278,22 @@ namespace KocCoAPI.API.Controllers
             {
                 return StatusCode(500, new { message = ex.Message });
             }
+
         }
 
-        [HttpGet("get-all-packages")]
-        public async Task<IActionResult> GetAllPackages()
-        {
-            //ornek
-            try
-            {
-                var packages = await _UserAppService.GetAllPackagesAsync();
+     
 
-                if (packages == null || !packages.Any())
-                {
-                    return NotFound(new { message = "No packages found." });
-                }
-
-                return Ok(packages);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = ex.Message });
-            }
-        }
-
+        [Authorize(Roles = "User,Coach")]
         [HttpGet("get-all-coaches")]
         public async Task<IActionResult> GetAllCoaches()
         {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return Unauthorized();
+            }
+
             try
             {
                 var coaches = await _UserAppService.GetAllCoachesAsync();
@@ -356,13 +311,17 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
-     
-
-  
-
+        [Authorize(Roles = "User,Coach")]
         [HttpGet("download-questions-document")]
         public async Task<IActionResult> DownloadQuestionsDocument([FromQuery] int testId)
         {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return Unauthorized();
+            }
+
             if (testId <= 0)
             {
                 return BadRequest(new { message = "Valid test ID is required." });
@@ -390,11 +349,17 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
-        
-
+        [Authorize(Roles = "Coach")]
         [HttpPost("create-work-schedule")]
         public async Task<IActionResult> CreateWorkSchedule([FromBody] WorkScheduleDTO workScheduleDTO)
         {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return Unauthorized();
+            }
+
             if (workScheduleDTO == null || string.IsNullOrEmpty(workScheduleDTO.Email))
             {
                 return BadRequest(new { message = "Email and GeneralNotes are required." });
@@ -422,12 +387,15 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
+        [Authorize(Roles = "User,Coach")]
         [HttpGet("get-work-schedules")]
-        public async Task<IActionResult> GetWorkSchedulesByEmail([FromQuery] string email)
+        public async Task<IActionResult> GetWorkSchedulesByEmail()
         {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+
             if (string.IsNullOrEmpty(email))
             {
-                return BadRequest(new { message = "Email is required." });
+                return Unauthorized();
             }
 
             try
@@ -447,10 +415,18 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
+        [Authorize(Roles = "User,Coach")]
         [HttpPost("add-test-result")]
-        public async Task<IActionResult> AddTestResult([FromQuery] string email, [FromQuery] int testId, [FromQuery] int grade)
+        public async Task<IActionResult> AddTestResult([FromQuery] int testId, [FromQuery] int grade)
         {
-            if (string.IsNullOrEmpty(email) || testId <= 0 || grade < 0)
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return Unauthorized();
+            }
+
+            if (testId <= 0 || grade < 0)
             {
                 return BadRequest(new { message = "Email, TestId, and Grade are required fields." });
             }
@@ -480,12 +456,14 @@ namespace KocCoAPI.API.Controllers
             }
         }
 
+        [Authorize(Roles = "User,Coach")]
         [HttpGet("get-test-results-by-email")]
-        public async Task<IActionResult> GetTestResultsByEmail([FromQuery] string email)
-        {
+        public async Task<IActionResult> GetTestResultsByEmail([FromQuery] string email) { 
+            
+
             if (string.IsNullOrEmpty(email))
             {
-                return BadRequest(new { message = "Email is required." });
+                return Unauthorized();
             }
 
             try
@@ -503,10 +481,6 @@ namespace KocCoAPI.API.Controllers
                 return StatusCode(500, new { message = ex.Message });
             }
         }
-
-
-
-
 
 
     }

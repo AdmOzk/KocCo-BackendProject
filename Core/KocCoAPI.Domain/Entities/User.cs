@@ -16,6 +16,7 @@
         public string Skills { get; set; }
         public int? CartId { get; set; }
 
+
         public ICollection<UserPurchased>? UserPurchases { get; set; }
 
         public ICollection<TestStudent> TestStudents { get; set; }

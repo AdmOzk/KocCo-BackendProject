@@ -3,6 +3,7 @@ using KocCoAPI.Application.DTOs;
 using KocCoAPI.Application.Interfaces;
 using KocCoAPI.Domain.Entities;
 using KocCoAPI.Domain.Interfaces;
+using System.Data;
 
 namespace KocCoAPI.Application.Services
 {
@@ -21,22 +22,22 @@ namespace KocCoAPI.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<AuthResult> LoginAsync(LoginDTO loginDto)
+        public async Task<AuthResult> LoginAsync(LoginRequestDTO loginRequestDTO)
         {
-            var userExist = await _userAppService.ExistsByUserMailAsync(loginDto.EmailAdress);
+            var userExist = await _userAppService.ExistsByUserMailAsync(loginRequestDTO.EmailAdress);
 
             if (userExist)
             {
-                var user = await _userAppService.GetByUserMailToUserAsync(loginDto.EmailAdress);
+                var user = await _userAppService.GetByUserMailToUserAsync(loginRequestDTO.EmailAdress);
 
-                if (user == null || !_passwordHasher.VerifyPassword(user.PasswordHash, loginDto.Password))
+                if (user == null || !_passwordHasher.VerifyPassword(user.PasswordHash, loginRequestDTO.Password))
                 {
                     return new AuthResult { Success = false, Errors = new[] { "Invalid email or password." } };
                 }
 
-                var userDto = _mapper.Map<UserDTO>(user);
+                var userDatas = await _userAppService.GetByUserMailToUserAsync(loginRequestDTO.EmailAdress);
 
-                var token = _tokenService.GenerateToken(userDto);
+                var token = _tokenService.GenerateToken(loginRequestDTO, userDatas.Roles);
                 var refreshToken = _tokenService.GenerateRefreshToken();
 
                 return new AuthResult
@@ -83,7 +84,13 @@ namespace KocCoAPI.Application.Services
 
             await _userAppService.AddUserAppAsync(userDto);
 
-            var token = _tokenService.GenerateToken(userDto);
+            var newLogin = new LoginRequestDTO
+            {
+                EmailAdress = userDto.EmailAddress,
+                Password = hashedPassword,
+            };
+
+            var token = _tokenService.GenerateToken(newLogin, userDto.Roles);
             var refreshToken = _tokenService.GenerateRefreshToken();
 
             return new AuthResult

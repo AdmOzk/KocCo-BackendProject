@@ -12,7 +12,7 @@ namespace KocCoAPI.Infrastructure.Persistence
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=LAPTOP-3DVE6SH7\\AÖ2100000419;Database=KocCo;Trusted_Connection=True;MultipleActiveResultSets=True;Integrated Security=True;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Server=YourServer;Database=YourDatabase;Trusted_Connection=True;MultipleActiveResultSets=True;Integrated Security=True;TrustServerCertificate=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,7 +29,8 @@ namespace KocCoAPI.Infrastructure.Persistence
                 .HasKey(c => c.PackageID);
 
             modelBuilder.Entity<CoachPackage>()
-                .HasNoKey();
+       .HasNoKey()
+       .ToTable("CoachPackages");
 
             modelBuilder.Entity<CartPackage>()
                 .HasNoKey();
@@ -52,11 +53,11 @@ namespace KocCoAPI.Infrastructure.Persistence
             modelBuilder.Entity<Test>()
                 .HasKey(c => c.TestId);
 
+            modelBuilder.Entity<CoachPackage>()
+              .HasKey(cp => new { cp.CoachId, cp.PackageId }); // Define composite key
+
             modelBuilder.Entity<TestStudent>()
                 .HasNoKey();
-
-            modelBuilder.Entity<TestResult>()
-              .HasNoKey();
 
             modelBuilder.Entity<TimeSlot>()
                 .HasKey(c => c.TimeSlotID);
@@ -65,7 +66,7 @@ namespace KocCoAPI.Infrastructure.Persistence
                 .HasKey(c => c.WorkScheduleId);
 
             modelBuilder.Entity<TestStudent>()
-    .HasKey(ts => new { ts.TestId, ts.StudentId }); // Composite key
+.HasKey(ts => new { ts.TestId, ts.StudentId }); // Composite key
 
             modelBuilder.Entity<TestStudent>()
                 .HasOne(ts => ts.Test)
@@ -77,16 +78,14 @@ namespace KocCoAPI.Infrastructure.Persistence
                 .WithMany(u => u.TestStudents)
                 .HasForeignKey(ts => ts.StudentId);
 
+            modelBuilder.Entity<TestResult>()
+          .HasKey(tr => tr.TestResultId); // Birincil anahtar olarak tanımlar
+
             // User -> UserPurchases (Bir Kullanıcı Birçok Satın Alım Yapabilir)
             modelBuilder.Entity<UserPurchased>()
                 .HasOne(up => up.User)
                 .WithMany(u => u.UserPurchases)
                 .HasForeignKey(up => up.StudentID);
-
-            modelBuilder.Entity<TestResult>()
-           .HasKey(tr => tr.TestResultId); // Birincil anahtar olarak tanımlar
-
-
 
             // UserPurchased -> Package (Bir Satın Alımda Bir Paket Olabilir)
             modelBuilder.Entity<UserPurchased>()
@@ -95,13 +94,12 @@ namespace KocCoAPI.Infrastructure.Persistence
                 .HasForeignKey(up => up.PackageID);
 
             modelBuilder.Entity<TestStudent>()
-    .HasKey(ts => new { ts.TestId, ts.StudentId }); // Composite key
+.HasKey(ts => new { ts.TestId, ts.StudentId }); // Composite key
+
 
             modelBuilder.Entity<CartPackage>()
        .HasKey(cp => new { cp.CartId, cp.PackageId }); // Composite key
         }
-
-
         public DbSet<User> Users { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartPackage> CartPackages { get; set; }

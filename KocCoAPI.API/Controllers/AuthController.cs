@@ -29,9 +29,9 @@ namespace KocCoAPI.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
         {
-            var result = await _authService.LoginAsync(loginDto);
+            var result = await _authService.LoginAsync(loginRequestDTO);
 
             if (!result.Success)
             {
