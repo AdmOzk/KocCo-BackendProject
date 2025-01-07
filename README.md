@@ -1,7 +1,7 @@
 # KoçCo Project Overview
 
-![image](![WhatsApp Image 2025-01-01 at 13 40 31](https://github.com/user-attachments/assets/8ebf250f-0b09-45ec-806a-e9587d8b9c39)
-)
+![image](https://github.com/user-attachments/assets/8ebf250f-0b09-45ec-806a-e9587d8b9c39)
+
 Note: You can find the photos containing the project pages in the docx file.
 ## About the Project
 KoçCo is a comprehensive coaching platform designed to facilitate effective student-teacher interactions. The project is tailored for students preparing for the YKS (university entrance exam in Turkey) and offers a streamlined experience across mobile and web platforms. Built with modern technologies and adhering to software development standards, KoçCo aims to provide personalized coaching, detailed progress tracking, and efficient communication tools.
