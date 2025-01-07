@@ -2,7 +2,8 @@
 
 ![image](https://github.com/user-attachments/assets/8ebf250f-0b09-45ec-806a-e9587d8b9c39)
 
-Note: You can find the photos containing the project pages in the docx file.
+![image]()
+
 ## About the Project
 KoçCo is a comprehensive coaching platform designed to facilitate effective student-teacher interactions. The project is tailored for students preparing for the YKS (university entrance exam in Turkey) and offers a streamlined experience across mobile and web platforms. Built with modern technologies and adhering to software development standards, KoçCo aims to provide personalized coaching, detailed progress tracking, and efficient communication tools.
 
@@ -45,9 +46,27 @@ The mobile application provides distinct interfaces for students and teachers, e
 
 ## Controllers
 1. Authentication process for login and registration.
-2. Features for managing payment cards: add, view, purchase, and delete.
-3. Teacher’s interface for viewing/updating personal details, income tracking, uploading files, creating lesson schedules, and viewing test results.
-4. Student’s interface for viewing personal details, teacher-shared resources, downloading documents, and tracking test results.
+
+![image](https://github.com/user-attachments/assets/e22b7a63-3ebc-4413-b712-f0b1075239bf)
+
+
+
+2. Features for managing payment cart: add, view, purchase, and delete.
+
+![image](https://github.com/user-attachments/assets/4ff239c9-635a-40aa-b8b0-e708816c5183)
+
+
+3. Features for Packages
+
+![image](https://github.com/user-attachments/assets/1b144ad6-69d0-4e70-acb8-74a0794aef96)
+
+
+4. Teacher’s interface for viewing/updating personal details, income tracking, uploading files, creating lesson schedules, and viewing test results.
+ Student’s interface for viewing personal details, teacher-shared resources, downloading documents, and tracking test results.
+
+![image](https://github.com/user-attachments/assets/58b59620-4ece-4cfd-97c5-7f5f8c1c0528)
+
+
 
 ## Web Application
 The web platform provides additional capabilities for both students and teachers, maintaining consistency with the mobile application.
