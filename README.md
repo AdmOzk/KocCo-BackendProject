@@ -41,7 +41,7 @@ The backend architecture of the KoçCo project was entirely developed by myself,
 14. Information about the application and its developers.
 15. Feedback submission page.
 
-## Key Backend Components
+### Key Backend Components
 1. Authentication process for login and registration.
 
 ![image](https://github.com/user-attachments/assets/e22b7a63-3ebc-4413-b712-f0b1075239bf)
