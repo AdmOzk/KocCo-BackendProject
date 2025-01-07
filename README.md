@@ -64,36 +64,36 @@ The backend architecture of the KoçCo project was entirely developed by myself,
 ![image](https://github.com/user-attachments/assets/58b59620-4ece-4cfd-97c5-7f5f8c1c0528)
 
 
-###BAKCEND ARCHITECTURE
-###ONION ARCHITECTURE
+## BAKCEND ARCHITECTURE
+### ONION ARCHITECTURE
 KoçCo's backend system is designed to handle complex business logic efficiently while maintaining scalability and security. By adhering to Onion Architecture,
 the project ensures a clean separation of concerns, making it easy to extend and maintain in the future. 
 
 ![image](https://github.com/user-attachments/assets/26ebca7c-dbe1-4a0e-9c10-ff059bcd4c77)
 
 
-###Project Structure
+## Project Structure
 
 The project follows Onion Architecture to ensure a clean separation of concerns, promoting loose coupling and high cohesion.
 
-###Layers of the Architecture
+### Layers of the Architecture
 
-###Core Layer (Domain)
+### Core Layer (Domain)
 Entities: Represents the core objects in the system (e.g., User, Package, TestResult).
 Interfaces: Defines contracts for repositories and services.
 Services: Contains core domain services that implement business rules.
 
-###Application Layer
+### Application Layer
 DTOs: Used to transfer data between layers without exposing internal entities.
 Interfaces: Defines service contracts that the controllers interact with.
 Services: Implements application logic by coordinating with the domain layer.
 
-###Infrastructure Layer
+### Infrastructure Layer
 Persistence: Contains the database context (e.g., SqlDbContext) and migration configurations.
 Repositories: Implements data access logic using Entity Framework Core.
 Services: Handles external services such as payment gateways, email services, etc.
 
-###API Layer
+### API Layer
 Controllers: Defines endpoints for the API.
 Mapping: Uses AutoMapper to map between DTOs and domain entities.
 
